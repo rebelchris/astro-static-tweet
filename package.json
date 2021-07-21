@@ -1,6 +1,10 @@
 {
   "name": "@rebelchris/astro-static-tweet",
-  "version": "0.0.2",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/rebelchris/astro-static-tweet"
+  },
+  "version": "0.0.3",
   "exports": "./index.js",
   "dependencies": {
     "dotenv": "^10.0.0",
