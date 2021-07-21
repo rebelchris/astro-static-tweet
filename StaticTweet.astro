@@ -1,0 +1,176 @@
+---
+import dotenv from 'dotenv'
+dotenv.config();
+import { TwitterClient } from 'twitter-api-client';
+const twitterClient = new TwitterClient({
+  apiKey: process.env.TWITTER_API_KEY,
+  apiSecret: process.env.TWITTER_API_SECRET,
+  accessToken: process.env.TWITTER_ACCESS_TOKEN,
+  accessTokenSecret: process.env.TWITTER_ACCESS_TOKEN_SECRET
+});
+
+export interface Props {
+  id: string;
+}
+
+const { id } = Astro.props;
+
+const data = await twitterClient.tweets.statusesShow({
+      id: id,
+      tweet_mode: 'extended',
+    });
+
+let { full_text } = data;
+
+data.entities.urls.forEach(url => {
+  full_text = full_text.replace(url.url, `<a target="_blank" href="${url.url}">${url.display_url}</a>`);
+});
+
+data.entities.user_mentions.forEach(mention => {
+  full_text = full_text.replace(`@${mention.screen_name}`, `<a target="_blank" href="https://twitter.com/${mention.screen_name}">@${mention.screen_name}</a>`);
+});
+
+data.entities.hashtags.forEach(hashtag => {
+  full_text = full_text.replace(`#${hashtag.text}`, `<a target="_blank" href="https://twitter.com/hashtag/${hashtag.text}">#${hashtag.text}</a>`);
+});
+
+data.entities.media.forEach(media => {
+  full_text = full_text.replace(media.url, '');
+});
+---
+<blockquote class="astro__tweet">
+  {data.entities.media.length &&
+    <div class='astro__tweet-media'>
+      <img src={data.entities.media[0].media_url_https} alt="unknown tweet media content">
+    </div>
+  }
+
+    <div class="astro__tweet-header">
+      <img class="astro__tweet-header-profile-picture" src={data.user.profile_image_url_https} alt={`${data.user.name} profile image`} />
+      <div class="astro__tweet-header-names">
+        <div class="astro__tweet-header-names-full">
+          {data.user.name}
+        </div>
+        <div class="astro__tweet-header-names-username">
+          @{data.user.screen_name}
+        </div>
+      </div>
+      <div class="astro__tweet-header-twitter-logo">
+        🦉
+      </div>
+    </div>
+    <div class="astro__tweet-body">
+      {full_text}
+    </div>
+    <div class="astro__tweet-date">
+      {data.created_at}
+    </div>
+
+    <div class="astro__tweet-actions">
+      <a target="_blank" href={`https://twitter.com/intent/tweet?in_reply_to=${data.id_str}`} class="astro__tweet-actions-button">
+        Reply
+      </a>
+      <a target="_blank" href={`https://twitter.com/intent/retweet?tweet_id=${data.id_str}`} class="astro__tweet-actions-button">
+        Retweet
+      </a>
+      <a target="_blank" href={`https://twitter.com/intent/like?tweet_id=${data.id_str}`} class="astro__tweet-actions-button">
+        Like
+      </a>
+    </div>
+</blockquote>
+
+<style lang="scss">
+.astro__tweet {
+  display: flex;
+  flex-direction: column;
+  background: white;
+  max-width: 500px;
+  font-size: 0.75em;
+  line-height: 1.35em;
+  border-radius: 5px;
+  margin: 0 auto;
+  min-height: 60px;
+  cursor: pointer;
+  padding: 0px;
+  border: 1px solid #efefef;
+  &:hover {
+    border: 1px solid darken(#efefef, 3%);
+  }
+
+  &-media {
+    position: relative;
+    overflow: hidden;
+    img {
+      width: 100%;
+      left: 0;
+      right: 0;
+      margin: auto;
+      border-top-left-radius: 5px;
+      border-top-right-radius: 5px;
+    }
+  }
+
+  &-header {
+    padding: 1rem;
+    display: flex;
+
+    &-profile-picture {
+      height: 40px;
+      min-height: 40px;
+      width: 40px;
+      border-radius: 50px;
+      background-color: #ececec;
+      margin: 0;
+    }
+    
+    &-names {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      margin: 0 1rem;
+      flex: 1 0 auto;
+
+      &-full {
+        color: #1c2022;
+        font-weight: bold;
+        font-size: 16px;
+      }
+      &-username {
+        color: #697882;
+        font-size: 14px;
+      }
+    }
+
+    &-twitter-logo {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+  }
+
+  &-body {
+    padding: 0 1rem 1rem;
+    color: #1c2022;
+    font-size: 16px;
+    line-height: 22px;
+    br {
+      line-height: 0;
+    }
+  }
+
+  &-date {
+    font-size: 14px;
+    color: #697882;
+    padding: 0 1rem;
+  }
+
+  &-actions {
+    display: flex;
+    color: #aab8c2;
+    font-size: 14px;
+    &-button {
+      padding: 1rem;
+    }
+  }
+}
+</style>
