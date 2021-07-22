@@ -27,15 +27,15 @@ if(data.in_reply_to_screen_name) {
 }
 
 data.entities.urls.forEach(url => {
-  full_text = full_text.replace(url.url, `<a target="_blank" href="${url.url}">${url.display_url}</a>`);
+  full_text = full_text.replace(url.url, `<a rel="noreferrer noopener" target="_blank" href="${url.url}">${url.display_url}</a>`);
 });
 
 data.entities.user_mentions.forEach(mention => {
-  full_text = full_text.replace(`@${mention.screen_name}`, `<a target="_blank" href="https://twitter.com/${mention.screen_name}">@${mention.screen_name}</a>`);
+  full_text = full_text.replace(`@${mention.screen_name}`, `<a rel="noreferrer noopener" target="_blank" href="https://twitter.com/${mention.screen_name}">@${mention.screen_name}</a>`);
 });
 
 data.entities?.hashtags.forEach(hashtag => {
-  full_text = full_text.replace(`#${hashtag.text}`, `<a target="_blank" href="https://twitter.com/hashtag/${hashtag.text}">#${hashtag.text}</a>`);
+  full_text = full_text.replace(`#${hashtag.text}`, `<a rel="noreferrer noopener" target="_blank" href="https://twitter.com/hashtag/${hashtag.text}">#${hashtag.text}</a>`);
 });
 
 if(data.entities.media) {
@@ -58,7 +58,9 @@ if(data.entities.media) {
           {data.user.name}
         </div>
         <div class="astro__tweet-header-names-username">
+          <a rel="noreferrer noopener" target="_blank" href={`https://twitter.com/${data.user.screen_name}`}>
           @{data.user.screen_name}
+          </a>
         </div>
       </div>
       <div class="astro__tweet-header-twitter-logo">
@@ -73,13 +75,13 @@ if(data.entities.media) {
     </div>
 
     <div class="astro__tweet-actions">
-      <a target="_blank" href={`https://twitter.com/intent/tweet?in_reply_to=${data.id_str}`} class="astro__tweet-actions-button">
+      <a rel="noreferrer noopener" target="_blank" href={`https://twitter.com/intent/tweet?in_reply_to=${data.id_str}`} class="astro__tweet-actions-button">
         Reply
       </a>
-      <a target="_blank" href={`https://twitter.com/intent/retweet?tweet_id=${data.id_str}`} class="astro__tweet-actions-button">
+      <a rel="noreferrer noopener" target="_blank" href={`https://twitter.com/intent/retweet?tweet_id=${data.id_str}`} class="astro__tweet-actions-button">
         Retweet
       </a>
-      <a target="_blank" href={`https://twitter.com/intent/like?tweet_id=${data.id_str}`} class="astro__tweet-actions-button">
+      <a rel="noreferrer noopener" target="_blank" href={`https://twitter.com/intent/like?tweet_id=${data.id_str}`} class="astro__tweet-actions-button">
         Like
       </a>
     </div>
@@ -96,7 +98,6 @@ if(data.entities.media) {
   border-radius: 5px;
   margin: 0 auto;
   min-height: 60px;
-  cursor: pointer;
   padding: 0px;
   border: 1px solid #efefef;
   &:hover {
