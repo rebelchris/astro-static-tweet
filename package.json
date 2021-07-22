@@ -4,7 +4,8 @@
     "type": "git",
     "url": "https://github.com/rebelchris/astro-static-tweet"
   },
-  "version": "0.0.5",
+  "keywords": ["astro-component"],
+  "version": "0.0.6",
   "exports": "./index.js",
   "dependencies": {
     "dotenv": "^10.0.0",

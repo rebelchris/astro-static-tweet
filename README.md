@@ -48,12 +48,12 @@ And that's it, you're now ready to go!
 
 ## Demo
 
-☑️ Sorry, still working on this 😅
+You can find the demo here: [Astro static tweet demo](https://astro-static-tweet.netlify.app/)
 
 ## Working on these features
 
-[ ] Fix styling
-[ ] Write style guide
-[ ] Test all tweet options (media/poll/video/multi image/reaction)
-[ ] Enable cache option?
-[ ] You tell me? Create an issue with your wishes
+- [ ] Fix styling
+- [ ] Write style guide
+- [ ] Test all tweet options (media/poll/video/multi image/reaction)
+- [ ] Enable cache option?
+- [ ] You tell me? Create an issue with your wishes
