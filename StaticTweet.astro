@@ -1,47 +1,50 @@
 ---
-import dotenv from 'dotenv'
-dotenv.config();
 import { TwitterClient } from 'twitter-api-client';
 const twitterClient = new TwitterClient({
-  apiKey: process.env.TWITTER_API_KEY,
-  apiSecret: process.env.TWITTER_API_SECRET,
-  accessToken: process.env.TWITTER_ACCESS_TOKEN,
-  accessTokenSecret: process.env.TWITTER_ACCESS_TOKEN_SECRET
+  apiKey: import.meta.env.PUBLIC_TWITTER_API_KEY,
+  apiSecret: import.meta.env.PUBLIC_TWITTER_API_SECRET,
+  accessToken: import.meta.env.PUBLIC_TWITTER_ACCESS_TOKEN,
+  accessTokenSecret: import.meta.env.PUBLIC_TWITTER_ACCESS_TOKEN_SECRET,
 });
-
-export interface Props {
-  id: string;
-}
 
 const { id } = Astro.props;
 
 const data = await twitterClient.tweets.statusesShow({
-      id: id,
-      tweet_mode: 'extended',
-    });
+  id: id,
+  tweet_mode: 'extended',
+});
 
 let { full_text } = data;
 
-if(data.in_reply_to_screen_name) {
+if (data.in_reply_to_screen_name) {
   full_text = full_text.replace(`@${data.in_reply_to_screen_name}`, '');
 }
 
-data.entities.urls.forEach(url => {
-  full_text = full_text.replace(url.url, `<a rel="noreferrer noopener" target="_blank" href="${url.url}">${url.display_url}</a>`);
+data.entities.urls.forEach((url) => {
+  full_text = full_text.replace(
+    url.url,
+    `<a rel="noreferrer noopener" target="_blank" href="${url.url}">${url.display_url}</a>`
+  );
 });
 
-data.entities.user_mentions.forEach(mention => {
-  full_text = full_text.replace(`@${mention.screen_name}`, `<a rel="noreferrer noopener" target="_blank" href="https://twitter.com/${mention.screen_name}">@${mention.screen_name}</a>`);
+data.entities.user_mentions.forEach((mention) => {
+  full_text = full_text.replace(
+    `@${mention.screen_name}`,
+    `<a rel="noreferrer noopener" target="_blank" href="https://twitter.com/${mention.screen_name}">@${mention.screen_name}</a>`
+  );
 });
 
-data.entities?.hashtags.forEach(hashtag => {
-  full_text = full_text.replace(`#${hashtag.text}`, `<a rel="noreferrer noopener" target="_blank" href="https://twitter.com/hashtag/${hashtag.text}">#${hashtag.text}</a>`);
+data.entities?.hashtags.forEach((hashtag) => {
+  full_text = full_text.replace(
+    `#${hashtag.text}`,
+    `<a rel="noreferrer noopener" target="_blank" href="https://twitter.com/hashtag/${hashtag.text}">#${hashtag.text}</a>`
+  );
 });
 
-if(data.entities.media) {
-    data.entities.media.forEach(media => {
+if (data.entities.media) {
+  data.entities.media.forEach((media) => {
     full_text = full_text.replace(media.url, '');
-    });
+  });
 }
 ---
 <blockquote class="astro__tweet">
@@ -129,7 +132,7 @@ if(data.entities.media) {
       background-color: #ececec;
       margin: 0;
     }
-    
+
     &-names {
       display: flex;
       flex-direction: column;

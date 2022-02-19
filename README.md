@@ -38,10 +38,23 @@ Follow my guide on [getting Twitter credentials](https://daily-dev-tips.com/post
 Then create a `.env` file in the root of your project and add the following variables.
 
 ```text
-TWITTER_API_KEY={API_KEY}
-TWITTER_API_SECRET={API_SECRET}
-TWITTER_ACCESS_TOKEN={ACCESS_TOKEN}
-TWITTER_ACCESS_TOKEN_SECRET={ACCESS_TOKEN_SECRET}
+    PUBLIC_TWITTER_API_KEY={API_KEY}
+    PUBLIC_TWITTER_API_SECRET={API_SECRET}
+    PUBLIC_TWITTER_ACCESS_TOKEN={ACCESS_TOKEN}
+    PUBLIC_TWITTER_ACCESS_TOKEN_SECRET={ACCESS_TOKEN_SECRET}
+```
+
+In Astro version 0.22 or higher you might need to exclude the Twitter API client in your `astro.config.mjs` file:
+
+```js
+export default {
+    // Other stuff
+  vite: {
+    ssr: {
+      external: ['twitter-api-client'],
+    },
+  },
+};
 ```
 
 And that's it, you're now ready to go!
